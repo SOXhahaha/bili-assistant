@@ -1631,7 +1631,7 @@
         const closeBtn = document.querySelector('.close-btn');
         if (closeBtn) {
             closeBtn.addEventListener('click', () => {
-                window.close();
+                window.electronAPI.quitApp();
             });
         }
 

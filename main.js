@@ -39,6 +39,10 @@ app.whenReady().then(() => {
     }
   });
 
+  ipcMain.on('quit-app', () => {
+    app.exit(0)
+  });
+
   app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) createWindow()
   })
