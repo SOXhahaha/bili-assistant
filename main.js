@@ -3,7 +3,8 @@ const fs = require('node:fs')
 const path = require('node:path')
 
 // Avoid Windows profile cache permission issues by pinning userData to workspace-local folder.
-const userDataPath = path.join(__dirname, '.app-data')
+const basePath = app.isPackaged ? path.dirname(process.execPath) : __dirname
+const userDataPath = path.join(basePath, '.app-data')
 if (!fs.existsSync(userDataPath)) {
   fs.mkdirSync(userDataPath, { recursive: true })
 }
@@ -17,6 +18,7 @@ const createWindow = () => {
     minHeight: 700,
     icon: path.join(__dirname, 'assets', 'icon.png'),
     titleBarStyle: 'hidden', // 隐藏默认标题栏，自定义UI
+    backgroundColor: '#f1f2f3', // 与页面背景色一致，消除闪白
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
       webviewTag: true // 启用 webview 以嵌入 B站 页面

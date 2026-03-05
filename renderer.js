@@ -1663,6 +1663,8 @@
         initialWebview.setAttribute('preload', WEBVIEW_PRELOAD_URL);
         initialWebview.setAttribute('useragent', WEBVIEW_USER_AGENT);
         attachWebviewEvents(initialWebview, 'tab-1');
+        // 延迟加载 B站页面，让 UI 壳子先显示
+        initialWebview.setAttribute('src', ACCOUNT_HOME_URL);
         switchToTab('tab-1');
     }
 

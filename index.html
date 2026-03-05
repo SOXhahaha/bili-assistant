@@ -142,7 +142,7 @@
 
             <div class="webview-stack" id="webviewContainer">
                 <!-- 使用持久化分区保存登录态，并通过 preload 强制拦截新窗口为标签页 -->
-                <webview id="biliWebview" class="bili-webview active" data-tab-id="tab-1" src="https://account.bilibili.com/account/home" partition="persist:bili-assistant" preload="./webview-preload.js"></webview>
+                <webview id="biliWebview" class="bili-webview active" data-tab-id="tab-1" partition="persist:bili-assistant" preload="./webview-preload.js"></webview>
             </div>
         </main>
     </div>
