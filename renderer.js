@@ -1170,7 +1170,7 @@
 
         if (!json || json.code !== 0 || !json.data || !json.data.list) return [];
 
-        const list = json.data.list.filter(v => v && v.bvid && v.duration > 30);
+        const list = json.data.list.filter(v => v && v.bvid && v.duration > 120);
         // 洗牌后取前 count 个
         for (let i = list.length - 1; i > 0; i--) {
             const j = Math.floor(Math.random() * (i + 1));
