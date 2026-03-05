@@ -1,0 +1,20 @@
+{
+  "name": "bili-assistant",
+  "version": "1.0.0",
+  "description": "Bilibili desktop automation assistant built with Electron",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "build:win": "electron-packager . bili-assistant --platform=win32 --arch=x64 --overwrite --out=release --prune=true --asar --icon=assets/icon.ico",
+    "release:zip": "powershell -NoProfile -ExecutionPolicy Bypass -Command \"$src='release/bili-assistant-win32-x64'; $dst='release/bili-assistant-win32-x64.zip'; if (!(Test-Path $src)) { throw 'Build output not found. Run npm run build:win first.' }; if (Test-Path $dst) { Remove-Item $dst -Force }; Compress-Archive -Path \"$src/*\" -DestinationPath $dst -Force\"",
+    "release:win": "npm run build:win && npm run release:zip",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "electron": "^40.7.0",
+    "electron-packager": "^17.1.2"
+  }
+}

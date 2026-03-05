@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>B站助手</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" type="image/png" href="assets/icon.png">
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- 自定义标题栏区域，用于拖拽 -->
+    <div class="custom-titlebar">
+        <div class="titlebar-drag-region">B站助手 Beta</div>
+        <div class="titlebar-controls">
+            <button class="nav-btn close-btn"><i class="fas fa-times"></i></button>
+        </div>
+    </div>
+
+    <div class="app-layout">
+        <!-- 控制面板 -->
+        <div class="control-panel">
+            <div class="panel-header">
+                <h2>任务配置</h2>
+                <div class="user-status offline" id="userStatus">
+                    <i class="fas fa-user-circle"></i> <span>未登录</span>
+                </div>
+            </div>
+
+            <div class="task-list">
+                <!-- 赞助/关注要求 -->
+                <div class="task-item" style="border-color: var(--primary-color); background-color: #fff1f4;">
+                    <div class="task-info">
+                        <span class="task-name" style="color: var(--primary-color);"><i class="fas fa-heart"></i> 关注作者 (必选项)</span>
+                        <span class="task-desc">感谢支持！关注作者B站账号后才可执行自动化任务。</span>
+                    </div>
+                    <label class="switch">
+                        <input type="checkbox" id="followAuthor" checked>
+                        <span class="slider round"></span>
+                    </label>
+                </div>
+
+                <!-- 任务项 1 -->
+                <div class="task-item">
+                    <div class="task-info">
+                        <span class="task-name">每日任务</span>
+                        <span class="task-desc">包含每日观看、分享视频等基础任务</span>
+                    </div>
+                    <label class="switch">
+                        <input type="checkbox" id="dailyTaskEnabled" checked>
+                        <span class="slider round"></span>
+                    </label>
+                </div>
+                <!-- 任务项 2 (子设置) -->
+                <div class="sub-setting-panel">
+                    <div class="sub-setting-header">
+                        <span class="sub-name"><i class="fas fa-coins" style="color:#f3a034"></i> 投币设置</span>
+                        <span class="coin-info">当前硬币: <strong id="currentCoin">--</strong></span>
+                    </div>
+                    <div class="coin-control">
+                        <div class="coin-label">
+                            <span>每日目标投币数</span>
+                            <span class="coin-value"><span id="coinTargetVal">5</span> / 5</span>
+                        </div>
+                        <input type="range" id="coinTarget" min="0" max="5" value="5" step="1">
+                        <span class="coin-hint">投币可获取经验，最高消耗5枚硬币获取50经验。</span>
+                    </div>
+                </div>
+
+                <!-- 任务项 3 -->
+                <div class="task-item">
+                    <div class="task-info">
+                        <span class="task-name">大会员签到</span>
+                        <span class="task-desc">领取大会员每日10经验</span>
+                    </div>
+                    <label class="switch">
+                        <input type="checkbox" id="vipSignEnabled" checked>
+                        <span class="slider round"></span>
+                    </label>
+                </div>
+                <!-- 底部提示信息 -->
+                <div class="author-notices">
+                    <div class="notice-item">
+                        <i class="fas fa-gift" style="color:#f3a034"></i>
+                        <span>年度大会员每月可免费领取 <a href="https://account.bilibili.com/account/big/myPackage" class="notice-link" data-external>5 B币券</a>，可前往 <a href="https://space.bilibili.com/22424343" class="notice-link" data-external>作者主页</a> 充电支持！</span>
+                    </div>
+                   
+                    <div class="notice-item">
+                        <i class="fas fa-code"></i>
+                        <span><strong>商务合作：</strong>如需程序托管或定制开发，可添加微信：ToptopJump</span>
+                    </div>
+                     <div class="notice-item">
+                        <i class="fas fa-code"></i>
+                        <span>如遇报错可站内私信作者，请提供详细的错误信息以便快速解决问题。</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 自动化进度面板 (默认隐藏) -->
+            <div class="progress-panel" id="progressPanel" style="display: none;">
+                <div class="progress-header">
+                    <h3>正在执行自动化任务</h3>
+                    <div class="progress-bar-container">
+                        <div class="progress-bar-fill" id="progressBarFill"></div>
+                    </div>
+                </div>
+
+                <div class="progress-steps" id="progressSteps">
+                    <!-- 步骤项将由JS动态生成 -->
+                </div>
+            </div>
+
+            <div class="action-area">
+                <button class="btn-primary" id="startBtn"><i class="fas fa-play"></i> 一键开始自动化</button>
+            </div>
+        </div>
+
+        <!-- 右侧：内置浏览器实时预览 -->
+        <main class="browser-content">
+            <div class="tab-bar" id="tabBar">
+                <button class="tab-item active" data-tab-id="tab-1" type="button">
+                    <i class="fab fa-bilibili"></i>
+                    <span class="tab-title">首页</span>
+                    <span class="tab-close" data-close-tab>×</span>
+                </button>
+                <button class="tab-add-btn" id="newTabBtn" type="button" title="新建标签">
+                    <i class="fas fa-plus"></i>
+                </button>
+            </div>
+
+            <div class="browser-header">
+                <div class="browser-address-bar">
+                    <i class="fas fa-lock"></i>
+                    <span id="addressText">https://account.bilibili.com/account/home</span>
+                </div>
+                <div class="browser-actions">
+                    <button class="browser-btn" id="refreshBtn"><i class="fas fa-sync-alt"></i></button>
+                    <button class="browser-btn" id="loginBtn"><i class="fas fa-sign-in-alt"></i> 去登录</button>
+                </div>
+            </div>
+
+            <div class="webview-stack" id="webviewContainer">
+                <!-- 使用持久化分区保存登录态，并通过 preload 强制拦截新窗口为标签页 -->
+                <webview id="biliWebview" class="bili-webview active" data-tab-id="tab-1" src="https://account.bilibili.com/account/home" partition="persist:bili-assistant" preload="./webview-preload.js"></webview>
+            </div>
+        </main>
+    </div>
+
+    <script src="renderer.js"></script>
+</body>
+</html>
