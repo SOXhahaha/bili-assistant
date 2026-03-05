@@ -12,9 +12,10 @@
   },
   "keywords": [],
   "author": "",
-  "license": "ISC",
+  "license": "MIT",
   "devDependencies": {
     "electron": "^40.7.0",
     "electron-packager": "^17.1.2"
   }
 }
+
